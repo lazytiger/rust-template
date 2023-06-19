@@ -1,3 +1,3 @@
 fn main() {
-    {{crate-name}}::run().unwrap();
+    {{crate_name}}::run().unwrap();
 }
