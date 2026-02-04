@@ -17,9 +17,6 @@ impl<T> OptionToResult<T> for Option<T> {
 const LOG_LEVEL: LevelFilter = LevelFilter::INFO;
 
 #[cfg(target_os = "android")]
-const APP_NAME: &str = "guardns";
-
-#[cfg(target_os = "android")]
 pub fn init_tracing() -> anyhow::Result<()> {
     fn tracing_level_filter(level: LevelFilter) -> log::LevelFilter {
         match level {
@@ -35,7 +32,7 @@ pub fn init_tracing() -> anyhow::Result<()> {
     android_logger::init_once(
         android_logger::Config::default()
             .with_max_level(tracing_level_filter(LOG_LEVEL))
-            .with_tag(APP_NAME),
+            .with_tag("{{crate_name}}"),
     );
     Ok(())
 }
