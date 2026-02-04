@@ -1,13 +1,14 @@
 [package]
-name = "guardns"
 version = "0.1.0"
+name = "{{project-name}}"
+authors = ["{{authors}}"]
 edition = "2024"
 
 [lib]
 crate-type = ["cdylib", "rlib"]
 
 [[bin]]
-name = "guard_dns"
+name = "{{project-name}}_bin"
 path = "src/main.rs"
 
 [dependencies]
