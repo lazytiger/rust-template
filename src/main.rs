@@ -1,3 +1,6 @@
+use guardns::init_tracing;
+
 fn main() {
-    {{crate_name}}::run().unwrap();
+    init_tracing().unwrap();
+    tracing::info!("Hello, world!");
 }
