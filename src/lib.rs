@@ -18,14 +18,14 @@ const LOG_LEVEL: tracing::metadata::LevelFilter = tracing::metadata::LevelFilter
 
 #[cfg(target_os = "android")]
 pub fn init_tracing() -> anyhow::Result<()> {
-    fn tracing_level_filter(level: LevelFilter) -> log::LevelFilter {
+    fn tracing_level_filter(level: tracing::metadata::LevelFilter) -> tracing::log::LevelFilter {
         match level {
-            tracing::metadata::LevelFilter::DEBUG => log::LevelFilter::Debug,
-            tracing::metadata::LevelFilter::TRACE => log::LevelFilter::Trace,
-            tracing::metadata::LevelFilter::INFO => log::LevelFilter::Info,
-            tracing::metadata::LevelFilter::WARN => log::LevelFilter::Warn,
-            tracing::metadata::LevelFilter::ERROR => log::LevelFilter::Error,
-            tracing::metadata::LevelFilter::OFF => log::LevelFilter::Off,
+            tracing::metadata::LevelFilter::DEBUG => tracing::log::LevelFilter::Debug,
+            tracing::metadata::LevelFilter::TRACE => tracing::log::LevelFilter::Trace,
+            tracing::metadata::LevelFilter::INFO => tracing::log::LevelFilter::Info,
+            tracing::metadata::LevelFilter::WARN => tracing::log::LevelFilter::Warn,
+            tracing::metadata::LevelFilter::ERROR => tracing::log::LevelFilter::Error,
+            tracing::metadata::LevelFilter::OFF => tracing::log::LevelFilter::Off,
         }
     }
 
