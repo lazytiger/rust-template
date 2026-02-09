@@ -46,6 +46,9 @@ pub fn init_tracing(log_path: Option<PathBuf>) -> anyhow::Result<Option<WorkerGu
         } else {
             log_path.parent().to_ok()?
         };
+        if !path.exists() {
+            std::fs::create_dir_all(path)?;
+        }
         tracing_appender::non_blocking(tracing_appender::rolling::daily(path, "guardns.log"))
     } else {
         tracing_appender::non_blocking(std::io::stdout())
