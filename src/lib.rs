@@ -1,4 +1,5 @@
 use derive_more::{Display, Error};
+use tracing_appender::non_blocking::WorkerGuard;
 
 #[derive(Error, Debug, Display)]
 pub struct OptionIsNone;
@@ -17,7 +18,7 @@ impl<T> OptionToResult<T> for Option<T> {
 const LOG_LEVEL: tracing::metadata::LevelFilter = tracing::metadata::LevelFilter::INFO;
 
 #[cfg(target_os = "android")]
-pub fn init_tracing() -> anyhow::Result<()> {
+pub fn init_tracing(_: Option<PathBuf>) -> anyhow::Result<Option<WorkerGuard>> {
     fn tracing_level_filter(level: tracing::metadata::LevelFilter) -> tracing::log::LevelFilter {
         match level {
             tracing::metadata::LevelFilter::DEBUG => tracing::log::LevelFilter::Debug,
@@ -32,13 +33,23 @@ pub fn init_tracing() -> anyhow::Result<()> {
     android_logger::init_once(
         android_logger::Config::default()
             .with_max_level(tracing_level_filter(LOG_LEVEL))
-            .with_tag("{{crate_name}}"),
+            .with_tag("guardns"),
     );
-    Ok(())
+    Ok(None)
 }
 
 #[cfg(not(target_os = "android"))]
-pub fn init_tracing() -> anyhow::Result<()> {
+pub fn init_tracing(log_path: Option<PathBuf>) -> anyhow::Result<Option<WorkerGuard>> {
+    let (writer, guard) = if let Some(log_path) = log_path {
+        let path = if log_path.is_dir() {
+            log_path.as_path()
+        } else {
+            log_path.parent().to_ok()?
+        };
+        tracing_appender::non_blocking(tracing_appender::rolling::daily(path, "guardns.log"))
+    } else {
+        tracing_appender::non_blocking(std::io::stdout())
+    };
     let builder = tracing_subscriber::fmt::Subscriber::builder();
     #[cfg(target_os = "ios")]
     let builder = builder.with_max_level(LOG_LEVEL);
@@ -47,8 +58,8 @@ pub fn init_tracing() -> anyhow::Result<()> {
     let subscriber = builder
         .with_file(true)
         .with_line_number(true)
-        .with_writer(std::io::stdout)
+        .with_writer(writer)
         .finish();
     tracing::subscriber::set_global_default(subscriber)?;
-    Ok(())
+    Ok(Some(guard))
 }
