@@ -5,11 +5,11 @@ use tracing_appender::non_blocking::WorkerGuard;
 pub struct OptionIsNone;
 
 pub trait OptionToResult<T> {
-    fn to_ok(self) -> Result<T, anyhow::Error>;
+    fn to_ok(self) -> anyhow::Result<T>;
 }
 
 impl<T> OptionToResult<T> for Option<T> {
-    fn to_ok(self) -> Result<T, anyhow::Error> {
+    fn to_ok(self) -> anyhow::Result<T> {
         self.ok_or_else(|| OptionIsNone.into())
     }
 }
