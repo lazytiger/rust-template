@@ -57,7 +57,11 @@ pub fn init_tracing(log_path: Option<PathBuf>) -> anyhow::Result<Option<WorkerGu
     #[cfg(target_os = "ios")]
     let builder = builder.with_max_level(LOG_LEVEL);
     #[cfg(not(target_os = "ios"))]
-    let builder = builder.with_env_filter(tracing_subscriber::EnvFilter::from_default_env());
+    let builder = builder.with_env_filter(
+        tracing_subscriber::EnvFilter::builder()
+            .with_default_directive(tracing::level_filters::LevelFilter::INFO.into())
+            .from_env_lossy(),
+    );
     let subscriber = builder
         .with_file(true)
         .with_line_number(true)
