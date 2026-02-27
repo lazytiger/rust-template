@@ -33,7 +33,7 @@ pub fn init_tracing(_: Option<PathBuf>) -> anyhow::Result<Option<WorkerGuard>> {
     android_logger::init_once(
         android_logger::Config::default()
             .with_max_level(tracing_level_filter(LOG_LEVEL))
-            .with_tag("guardns"),
+            .with_tag("{{project-name}}"),
     );
     Ok(None)
 }
@@ -49,7 +49,10 @@ pub fn init_tracing(log_path: Option<std::path::PathBuf>) -> anyhow::Result<Opti
         if !path.exists() {
             std::fs::create_dir_all(path)?;
         }
-        tracing_appender::non_blocking(tracing_appender::rolling::daily(path, "guardns.log"))
+        tracing_appender::non_blocking(tracing_appender::rolling::daily(
+            path,
+            "{{project-name}}.log",
+        ))
     } else {
         tracing_appender::non_blocking(std::io::stdout())
     };
