@@ -39,7 +39,7 @@ pub fn init_tracing(_: Option<PathBuf>) -> anyhow::Result<Option<WorkerGuard>> {
 }
 
 #[cfg(not(target_os = "android"))]
-pub fn init_tracing(log_path: Option<PathBuf>) -> anyhow::Result<Option<WorkerGuard>> {
+pub fn init_tracing(log_path: Option<std::path::PathBuf>) -> anyhow::Result<Option<WorkerGuard>> {
     let (writer, guard) = if let Some(log_path) = log_path {
         let path = if log_path.is_dir() {
             log_path.as_path()

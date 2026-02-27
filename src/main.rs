@@ -1,6 +1,7 @@
-use guardns::init_tracing;
+use {{project_name}}::init_tracing;
 
-fn main() {
-    init_tracing().unwrap();
+fn main() ->anyhow::Result<()> {
+    let _guard = init_tracing()?;
     tracing::info!("Hello, world!");
+    Ok(())
 }
