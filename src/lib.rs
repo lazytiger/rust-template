@@ -66,6 +66,7 @@ pub fn init_tracing(log_path: Option<std::path::PathBuf>) -> anyhow::Result<Opti
             .from_env_lossy(),
     );
     let subscriber = builder
+        .with_ansi(false)
         .with_file(true)
         .with_line_number(true)
         .with_writer(writer)
