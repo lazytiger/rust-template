@@ -70,6 +70,7 @@ pub fn init_tracing(log_path: Option<std::path::PathBuf>) -> anyhow::Result<Opti
         .with_file(true)
         .with_line_number(true)
         .with_writer(writer)
+        .with_timer(tracing_subscriber::fmt::time::ChronoLocal::default())
         .finish();
     tracing::subscriber::set_global_default(subscriber)?;
     Ok(Some(guard))
